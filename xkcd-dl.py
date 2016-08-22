@@ -2,20 +2,7 @@
 
 import urllib3
 import os.path
-#from html.parser import HTMLParser
-#from xml.etree.ElementTree import ElementTree
-#import xml.etree.ElementTree as ET
 from lxml import html
-
-#class xkcdPageParser(HTMLParser):
-#      def handle_starttag(self, tag, attrs):
-#            # Find div with id 'comic' 
-#            if (tag=='div'):
-#                  for a in attrs:
-#                        if(a[0]=='id'):
-#                              if (a[1]=='comic'):
-#                                    print ('Found Comic Tag')
-                                    
 
 http = urllib3.PoolManager()
 xkcdURL='http://xkcd.com/'
