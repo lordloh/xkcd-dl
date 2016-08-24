@@ -4,6 +4,8 @@ import urllib3
 import os.path
 from lxml import html
 
+# Function to print a string iff the -v or --verbose is passed.
+# Else, the function dose nothing.
 def verbose(string):
       global args
       if args.verbose:
@@ -11,12 +13,15 @@ def verbose(string):
 
 def main():
       global args, save_path
-      http = urllib3.PoolManager()
+      http = urllib3.PoolManager() 
       xkcdURL='http://xkcd.com/'
-      # Check and create a floder to save images to.
+      # Check if the save_path folder exists and create the floder if it does not exist.
       if (not os.path.isdir(save_path)):
             verbose("Folder "+save_path+" does not exist. Creating it.")
-            os.mkdir(save_path)
+            try:
+                  os.mkdir(save_path)
+            except e:
+                  print("Error: Cannot create the folder "+save_path)
       # Download all
       if (args.all or args.latest):
             # Download the index of comics.
@@ -53,10 +58,12 @@ def main():
                   comic_file_name=comic_image[0].split('/');
                   if (not os.path.isfile(save_path+'/'+file_number+'_'+comic_file_name[-1])):
                         r = http.request('GET','http:'+comic_image[0])
-                        f = open(save_path+'/'+file_number+'_'+comic_file_name[-1], 'bw')
-                        f.write(r.data)
-                        f.close()
-                        #print("ok")
+                        try:
+                              f = open(save_path+'/'+file_number+'_'+comic_file_name[-1], 'bw')
+                              f.write(r.data)
+                              f.close()
+                        except e:
+                              print ("Error: Cannot create the file :"+save_path+'/'+file_number+'_'+comic_file_name[-1])
                         break
                   else:
                         print ("File exists!")

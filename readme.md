@@ -11,7 +11,7 @@ This project is inspired by some 404 pages that had xkcd comics.
 * Save Caption & Alt.
 * Save state - to resume downloading.
 * ~~Options to download all images.~~
-* option to download latest only.
+* ~~option to download latest only.~~
 * ~~Option to downlod by number.~~
 
 ### License
