@@ -7,12 +7,17 @@ This script is intended to be used in cron jobs to get the newest image file or 
 
 This project is inspired by some 404 pages that had xkcd comics.
 
-### Roadmap
-* Save Caption & Alt.
-* Save state - to resume downloading.
-* ~~Options to download all images.~~
-* ~~option to download latest only.~~
-* ~~Option to downlod by number.~~
+### Usage
+
+`xkcd-dl.py [-h] [--all | --number NUMBER | --latest] [--saveto SAVETO] [-v]`
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --all            Download all comics.
+  --number NUMBER  Download comics number.
+  --latest         Download the latest comic.
+  --saveto SAVETO  The folder where the comics are to be saved.
+  -v, --verbose    Verbose output.
 
 ### License
 xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License.
