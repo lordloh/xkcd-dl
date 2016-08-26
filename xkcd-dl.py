@@ -31,6 +31,7 @@ def download_image(config, meta):
                   save_path + '/' + file_number + '_' + comic_file_name[-1])
     else:
         verbose("Image file exists. Comic:" + str(meta['num']))
+    return None
 
 
 def download_meta(config, number):
@@ -149,7 +150,10 @@ def main(config):
                     meta = download_meta(config, next_num)
             else:
                 break
-
+    return None
+def scan(config):
+    
+    return None
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
@@ -160,6 +164,8 @@ group.add_argument("--latest", help="Download the latest comic.",
 parser.add_argument("--saveto",
                     help="The folder where the comics are to be saved.",
                     type=str, default="xkcd_archive")
+group.add_argument("--scan", help="Scan and index downloaded comics.",
+                   action="store_true")
 parser.add_argument("-v", "--verbose", help="Verbose output.",
                     action="store_true")
 parser.add_argument("-i", help="Ignore errors.",
