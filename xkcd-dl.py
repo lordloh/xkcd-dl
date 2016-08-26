@@ -3,6 +3,7 @@ import argparse
 import urllib3
 import os.path
 import json
+import glob
 
 
 # Function to print a string iff the -v or --verbose is passed.
@@ -122,6 +123,9 @@ def main(config):
     elif (args.number):
         # Else get meta by number.
         meta_number = args.number
+    elif (args.scan):
+        scan(config)
+        exit()
     else:
         parser.print_help()
         exit()
@@ -150,10 +154,47 @@ def main(config):
                     meta = download_meta(config, next_num)
             else:
                 break
+    scan(config)
     return None
+
+
 def scan(config):
-    
+    args = config['args']
+    http = config['http']
+    save_path = args.saveto
+    try:
+        meta_file_list = glob.glob(save_path + '/meta/*_info.0.json')
+    except e:
+        print("Cannot read the meta folder:" + save_path +
+              '/meta/*_info.0.json')
+        exit()
+    restruct_meta_array = []
+    for meta_file in meta_file_list:
+        try:
+            fp = open(meta_file, 'r')
+            json_string = fp.read()
+            meta = json.loads(json_string)
+            fp.close()
+        except e:
+            print("Error reading meta file :" +
+                  meta_file + "\nCannot continue.")
+            exit()
+        restruct_meta = {}
+        restruct_meta["num"] = meta['num']
+        restruct_meta["title"] = meta['title']
+        restruct_meta["safe_title"] = meta['safe_title']
+        restruct_meta["alt"] = meta['alt']
+        restruct_meta_array.append(restruct_meta)
+    complete_meta = json.dumps(restruct_meta_array)
+    try:
+        fp = open(save_path + '/meta/meta.json', 'w')
+        fp.write(complete_meta)
+        fp.close()
+    except e:
+        print("Error creating Metadata file: " + save_path + '/meta/meta.json')
+    verbose("Scaning metadata completed")
     return None
+
 
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
