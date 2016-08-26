@@ -28,13 +28,14 @@ def download_image(meta):
             print("Error: Cannot create the image file :" +
                   save_path + '/' + file_number + '_' + comic_file_name[-1])
     else:
-        print("File exists!")
+        verbose("Image file exists. Comic:"+str(meta['num']))
 
 
 def download_meta(number):
     global xkcdURL, save_path, http, BASE_DIR
     if (number != -1):
         # if one queries by number
+        verbose("Downloading the latest meta")
         cache_file = BASE_DIR + "/" + save_path + "/meta/" \
                      + str(number) + "_info.0.json"
     else:
@@ -43,7 +44,7 @@ def download_meta(number):
         cache_file = BASE_DIR+"/"+save_path+"/meta/NONEXISTANT_info.0.json"
     # check if the info.0.json meta file is cached.
     if (os.path.isfile(save_path + '/meta/' + str(number) + '_info.0.json')):
-        verbose("Cached meta file found!")
+        verbose("Cached meta file found for comic :"+str(number))
         # Meta has already been downloaded - return local file
         try:
             meta_fp = open(save_path + '/meta/' +
@@ -57,13 +58,13 @@ def download_meta(number):
         meta = json.loads(meta_json)
     else:
         # We will have to download it from the internet - first, build the URL.
-        verbose("Cached meta file not found. Downloading from the internet")
         if (number == -1):
             # URL for the latest.
             meta_url = xkcdURL + 'info.0.json'
         else:
             # URL for a numbered comic.
             meta_url = xkcdURL + str(number) + '/info.0.json'
+        verbose("Cached meta file not found. Downloading from the internet. Comic :" + str(number))
         # download the info.0.json from the built meta_url
         r = http.request('GET', meta_url)
         if (r.status == 200):
@@ -85,14 +86,13 @@ def download_meta(number):
             # Error downloading the meta data from the internet.
             print("Error Downloading meta data from " + meta_url +
                   "\nStatus:"+str(r.status))
-            exit()
+            meta = {'skip':True}
     # return the meta object
     return meta
 
 
 def main():
-    global args, save_path
-    http = urllib3.PoolManager()
+    global args, save_path, http
     # Check if the save_path folder exists and create the folder if it
     # does not exist.
     if (not os.path.isdir(save_path)):
@@ -110,19 +110,30 @@ def main():
         # Else get meta by number.
         meta_number = args.number
     meta = download_meta(meta_number)
+    if ('skip' in meta):
+        verbose("Cannot continue due to errors.")
+        exit()
     if (args.latest or args.number):
         # if a single request is made - by number or only latest, download
         # 1 image and we are done.
-        verbose("Downloading image now.")
+        verbose("Downloading image now. Comic :"+str(meta['num']))
         download_image(meta)
     elif (args.all):
         # if multiple requests are made --all, run in a loop. decrementing the
         # meta['num'] till we reach 1
-        while (meta['num'] >= 1):
+        while (True):
             download_image(meta)
             # So we do not attempt to fetch image 0 - it does not exist.
-            if (meta['num'] > 1):
-                meta = download_meta(meta['num']-1)
+            next_num = meta['num']
+            if (next_num > 1):
+                next_num = meta['num'] - 1
+                meta = download_meta(next_num)
+                while ('skip' in meta):
+                    next_num = next_num - 1 
+                    verbose("Skipping to meta :" + str(next_num))
+                    meta = download_meta(next_num)
+            else:
+                break;
 
 
 parser = argparse.ArgumentParser()
@@ -135,6 +146,8 @@ parser.add_argument("--saveto",
                     help="The folder where the comics are to be saved.",
                     type=str, default="xkcd_archive")
 parser.add_argument("-v", "--verbose", help="Verbose output.",
+                    action="store_true")
+parser.add_argument("-i", help="Ignore errors.",
                     action="store_true")
 args = parser.parse_args()
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
