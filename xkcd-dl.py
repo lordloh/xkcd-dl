@@ -86,6 +86,8 @@ def download_meta(number):
             # Error downloading the meta data from the internet.
             print("Error Downloading meta data from " + meta_url +
                   "\nStatus:"+str(r.status))
+            if (not args.i):
+                exit()
             meta = {'skip':True}
     # return the meta object
     return meta
@@ -95,6 +97,7 @@ def main():
     global args, save_path, http
     # Check if the save_path folder exists and create the folder if it
     # does not exist.
+    verbose("Downloading to " + save_path)
     if (not os.path.isdir(save_path)):
         verbose("Folder " + save_path + " does not exist. Creating it.")
         try:
@@ -109,6 +112,9 @@ def main():
     elif (args.number):
         # Else get meta by number.
         meta_number = args.number
+    else:
+        parser.print_help()
+        exit()
     meta = download_meta(meta_number)
     if ('skip' in meta):
         verbose("Cannot continue due to errors.")
@@ -156,6 +162,5 @@ http = urllib3.PoolManager()
 if args.all:
     verbose("Downiloading all comics.")
 save_path = args.saveto
-verbose("Downloading to "+save_path)
 if __name__ == "__main__":
     main()
