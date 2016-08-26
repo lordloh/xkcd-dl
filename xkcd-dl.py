@@ -172,6 +172,6 @@ http = urllib3.PoolManager()
 config['http'] = http
 config['args'] = args
 if args.all:
-    verbose("Downiloading all comics.")
+    verbose("Downloading all comics.")
 if __name__ == "__main__":
     main(config)
