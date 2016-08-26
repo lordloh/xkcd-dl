@@ -16,8 +16,8 @@ def verbose(string):
 def download_image(meta):
     global http
     comic_file_name = meta['img'].split('/')
-    if (not os.path.isfile(save_path + '/' +
-                        str(meta['num']) + '_' + comic_file_name[-1])):
+    if (not os.path.isfile(save_path +
+            '/' + str(meta['num']) + '_' + comic_file_name[-1])):
         r = http.request('GET', meta['img'])
         try:
             f = open(save_path + '/' +
@@ -37,7 +37,7 @@ def download_meta(number):
         # if one queries by number
         verbose("Downloading the latest meta")
         cache_file = BASE_DIR + "/" + save_path + "/meta/" \
-                     + str(number) + "_info.0.json"
+            + str(number) + "_info.0.json"
     else:
         # If we have chosen --latest or all, always query the internet,
         # since we do not know the number for the latest comic.
@@ -64,7 +64,8 @@ def download_meta(number):
         else:
             # URL for a numbered comic.
             meta_url = xkcdURL + str(number) + '/info.0.json'
-        verbose("Cached meta file not found. Downloading from the internet. Comic :" + str(number))
+        verbose("Cached meta file not found. Downloading from the internet." +
+                "Comic :" + str(number))
         # download the info.0.json from the built meta_url
         r = http.request('GET', meta_url)
         if (r.status == 200):
@@ -88,7 +89,7 @@ def download_meta(number):
                   "\nStatus:"+str(r.status))
             if (not args.i):
                 exit()
-            meta = {'skip':True}
+            meta = {'skip': True}
     # return the meta object
     return meta
 
@@ -135,11 +136,11 @@ def main():
                 next_num = meta['num'] - 1
                 meta = download_meta(next_num)
                 while ('skip' in meta):
-                    next_num = next_num - 1 
+                    next_num = next_num - 1
                     verbose("Skipping to meta :" + str(next_num))
                     meta = download_meta(next_num)
             else:
-                break;
+                break
 
 
 parser = argparse.ArgumentParser()
