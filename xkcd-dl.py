@@ -13,8 +13,10 @@ def verbose(string):
         print(string)
 
 
-def download_image(meta):
-    global http
+def download_image(config, meta):
+    http = config['http']
+    args = config['args']
+    save_path = args.saveto
     comic_file_name = meta['img'].split('/')
     if (not os.path.isfile(save_path +
             '/' + str(meta['num']) + '_' + comic_file_name[-1])):
@@ -28,11 +30,15 @@ def download_image(meta):
             print("Error: Cannot create the image file :" +
                   save_path + '/' + file_number + '_' + comic_file_name[-1])
     else:
-        verbose("Image file exists. Comic:"+str(meta['num']))
+        verbose("Image file exists. Comic:" + str(meta['num']))
 
 
-def download_meta(number):
-    global xkcdURL, save_path, http, BASE_DIR
+def download_meta(config, number):
+    xkcdURL = config['xkcdURL']
+    args = config['args']
+    http = config['http']
+    BASE_DIR = config['BASE_DIR']
+    save_path = args.saveto
     if (number != -1):
         # if one queries by number
         verbose("Downloading the latest meta")
@@ -94,8 +100,10 @@ def download_meta(number):
     return meta
 
 
-def main():
-    global args, save_path, http
+def main(config):
+    args = config['args']
+    http = config['http']
+    save_path = args.saveto
     # Check if the save_path folder exists and create the folder if it
     # does not exist.
     verbose("Downloading to " + save_path)
@@ -116,7 +124,7 @@ def main():
     else:
         parser.print_help()
         exit()
-    meta = download_meta(meta_number)
+    meta = download_meta(config, meta_number)
     if ('skip' in meta):
         verbose("Cannot continue due to errors.")
         exit()
@@ -124,21 +132,21 @@ def main():
         # if a single request is made - by number or only latest, download
         # 1 image and we are done.
         verbose("Downloading image now. Comic :"+str(meta['num']))
-        download_image(meta)
+        download_image(config, meta)
     elif (args.all):
         # if multiple requests are made --all, run in a loop. decrementing the
         # meta['num'] till we reach 1
         while (True):
-            download_image(meta)
+            download_image(config, meta)
             # So we do not attempt to fetch image 0 - it does not exist.
             next_num = meta['num']
             if (next_num > 1):
                 next_num = meta['num'] - 1
-                meta = download_meta(next_num)
+                meta = download_meta(config, next_num)
                 while ('skip' in meta):
                     next_num = next_num - 1
                     verbose("Skipping to meta :" + str(next_num))
-                    meta = download_meta(next_num)
+                    meta = download_meta(config, next_num)
             else:
                 break
 
@@ -157,11 +165,13 @@ parser.add_argument("-v", "--verbose", help="Verbose output.",
 parser.add_argument("-i", help="Ignore errors.",
                     action="store_true")
 args = parser.parse_args()
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-xkcdURL = 'http://xkcd.com/'
+config = {}
+config['BASE_DIR'] = os.path.dirname(os.path.realpath(__file__))
+config['xkcdURL'] = 'http://xkcd.com/'
 http = urllib3.PoolManager()
+config['http'] = http
+config['args'] = args
 if args.all:
     verbose("Downiloading all comics.")
-save_path = args.saveto
 if __name__ == "__main__":
-    main()
+    main(config)
