@@ -50,9 +50,9 @@
                 file_put_contents("timefile",time()."*".$comic_number);
             }
             $comic=$comic_meta[$comic_number];
-            echo "<div class='center'><h2 class='imgTitle'>".$comic->title."</h2>
-                <img src='".$_SERVER['CONTEXT_PREFIX']."$comic->img' alt='$comic->alt' /><br/>"
-                ."<span class='caption'>".$comic->alt."</span></div>";
+            echo "<div class=\"center\"><h2 class=\"imgTitle\">".$comic->title."</h2>
+                <img src=\"$comic->img\" alt=\"$comic->alt\" /><br/>"
+                ."<span class=\"caption\">".$comic->alt."</span></div>";
         ?>
         <hr/>
         <footer>xkcd comics are licensed under xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License</footer>
