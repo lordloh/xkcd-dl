@@ -19,19 +19,22 @@ def download_image(config, meta):
     args = config['args']
     save_path = args.saveto
     comic_file_name = meta['img'].split('/')
-    if (not os.path.isfile(save_path +
-            '/' + str(meta['num']) + '_' + comic_file_name[-1])):
-        r = http.request('GET', meta['img'])
-        try:
-            f = open(save_path + '/' +
-                     str(meta['num']) + '_' + comic_file_name[-1], 'bw')
-            f.write(r.data)
-            f.close()
-        except e:
-            print("Error: Cannot create the image file :" +
-                  save_path + '/' + file_number + '_' + comic_file_name[-1])
+    if (comic_file_name[-1] != ""):
+        if (not os.path.isfile(save_path +
+                '/' + str(meta['num']) + '_' + comic_file_name[-1])):
+            r = http.request('GET', meta['img'])
+            try:
+                f = open(save_path + '/' +
+                         str(meta['num']) + '_' + comic_file_name[-1], 'bw')
+                f.write(r.data)
+                f.close()
+            except e:
+                print("Error: Cannot create the image file :" + save_path +
+                      '/' + file_number + '_' + comic_file_name[-1])
+        else:
+            verbose("Image file exists. Comic:" + str(meta['num']))
     else:
-        verbose("Image file exists. Comic:" + str(meta['num']))
+        print("No comic file to download for "+str(meta['num']))
     return None
 
 
