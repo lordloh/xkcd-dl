@@ -20,7 +20,7 @@ def download_image(config, meta):
     save_path = args.saveto
     comic_file_name = meta['img'].split('/')
     if (comic_file_name[-1] != ""):
-        if (not os.path.isfile(save_path +
+        if (not os.path.isfile(BASE_DIR + "/" + save_path +
                 '/' + str(meta['num']) + '_' + comic_file_name[-1])):
             r = http.request('GET', meta['img'])
             try:
@@ -164,6 +164,7 @@ def main(config):
 def scan(config):
     args = config['args']
     http = config['http']
+    BASE_DIR = config['BASE_DIR']
     save_path = args.saveto
     try:
         meta_file_list = glob.glob(save_path + '/meta/*_info.0.json')
@@ -182,7 +183,15 @@ def scan(config):
             print("Error reading meta file :" +
                   meta_file + "\nCannot continue.")
             exit()
+        img_url = meta['img'].split('/')
+        img_file_name = img_url[-1]
+        if (img_file_name == "" or not os.path.isfile(BASE_DIR + '/' +
+            save_path + '/' + str(meta['num']) + "_" + img_file_name)):
+            verbose(str(meta['num'])+" not found")
+            continue
         restruct_meta = {}
+        restruct_meta["img"] = save_path + '/' + \
+                               str(meta['num']) + "_" + img_file_name
         restruct_meta["num"] = meta['num']
         restruct_meta["title"] = meta['title']
         restruct_meta["safe_title"] = meta['safe_title']
