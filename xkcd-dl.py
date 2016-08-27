@@ -186,7 +186,7 @@ def scan(config):
         img_url = meta['img'].split('/')
         img_file_name = img_url[-1]
         if (img_file_name == "" or not os.path.isfile(BASE_DIR + '/' +
-            save_path + '/' + str(meta['num']) + "_" + img_file_name)):
+                save_path + '/' + str(meta['num']) + "_" + img_file_name)):
             verbose(str(meta['num'])+" not found")
             continue
         restruct_meta = {}
