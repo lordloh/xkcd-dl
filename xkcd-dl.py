@@ -90,7 +90,7 @@ def download_meta(config, number):
                                str(meta['num']) + "_info.0.json", 'w')
                 meta_fp.write(data)
                 meta_fp.close()
-            except:
+            except e:
                 # Problem saving - permissions etc.
                 print("Error caching meta data to file: " + save_path +
                       "/meta/" + str(meta['num']) + "_info.0.json")
@@ -163,7 +163,6 @@ def main(config):
 
 def scan(config):
     args = config['args']
-    http = config['http']
     BASE_DIR = config['BASE_DIR']
     save_path = args.saveto
     verbose("Starting metadata scan.")
