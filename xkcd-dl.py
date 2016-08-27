@@ -18,6 +18,7 @@ def download_image(config, meta):
     http = config['http']
     args = config['args']
     save_path = args.saveto
+    BASE_DIR = config['BASE_DIR']
     comic_file_name = meta['img'].split('/')
     if (comic_file_name[-1] != ""):
         if (not os.path.isfile(BASE_DIR + "/" + save_path +
@@ -54,7 +55,7 @@ def download_meta(config, number):
         # since we do not know the number for the latest comic.
         cache_file = BASE_DIR+"/"+save_path+"/meta/NONEXISTANT_info.0.json"
     # check if the info.0.json meta file is cached.
-    if (os.path.isfile(save_path + '/meta/' + str(number) + '_info.0.json')):
+    if (os.path.isfile(cache_file)):
         verbose("Cached meta file found for comic :"+str(number))
         # Meta has already been downloaded - return local file
         try:
@@ -62,7 +63,7 @@ def download_meta(config, number):
                            str(number) + '_info.0.json', 'r')
             meta_json = meta_fp.read()
             meta_fp.close()
-        except:
+        except e:
             print("Error reading cached meta file: " + save_path +
                   '/meta/' + str(number) + '_info.0.json')
             exit()
@@ -107,7 +108,6 @@ def download_meta(config, number):
 
 def main(config):
     args = config['args']
-    http = config['http']
     save_path = args.saveto
     # Check if the save_path folder exists and create the folder if it
     # does not exist.
@@ -166,6 +166,7 @@ def scan(config):
     http = config['http']
     BASE_DIR = config['BASE_DIR']
     save_path = args.saveto
+    verbose("Starting metadata scan.")
     try:
         meta_file_list = glob.glob(save_path + '/meta/*_info.0.json')
     except e:
