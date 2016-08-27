@@ -38,6 +38,17 @@
             $json_file=file_get_contents("xkcd_archive/meta/meta.json");
             $comic_meta=json_decode($json_file);
             $comic_number=rand(0,count($comic_meta));
+            if (file_exists("timefile")){
+                $time_file_contents=file_get_contents("timefile");
+                $time_part=explode("*",$time_file_contents);
+                if(time()-$time_part[0]>600){
+                    $r=file_put_contents("timefile",time()."*".$comic_number);
+                }else{
+                    if (count($time_part>1)) $comic_number=$time_part[1];
+                }
+            }else{
+                file_put_contents("timefile",time()."*".$comic_number);
+            }
             $comic=$comic_meta[$comic_number];
             echo "<div class='center'><h2 class='imgTitle'>".$comic->title."</h2>
                 <img src='$comic->img' alt='$comic->alt' /><br/>"
