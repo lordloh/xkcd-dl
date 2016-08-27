@@ -20,6 +20,10 @@
                 font-size:3em;
                 font-family:calibri;
             }
+            footer{
+                font-size:small;
+                font-family:'courier New', Courier;
+            }
         </style>
     </head>
     <body>
@@ -39,6 +43,8 @@
                 <img src='$comic->img' alt='$comic->alt' /><br/>"
                 ."<span class='caption'>".$comic->alt."</span></div>";
         ?>
+        <hr/>
+        <footer>xkcd comics are licensed under xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License</footer>
     </body>
 </html>
     
