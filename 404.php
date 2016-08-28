@@ -55,7 +55,7 @@
                 ."<span class=\"caption\">".$comic->alt."</span></div>";
         ?>
         <hr/>
-        <footer>xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License</footer>
+        <footer><a href="https://xkcd.com/">xkcd comics</a> are licensed under a Creative Commons Attribution-NonCommercial 2.5 License<br/>Get the source code of the <a href="https://github.com/lordloh/xkcd-dl">xkcd 404 pages on github</a>.</footer>
     </body>
 </html>
     
