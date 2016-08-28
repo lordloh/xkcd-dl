@@ -20,22 +20,23 @@ def download_image(config, meta):
     save_path = args.saveto
     BASE_DIR = config['BASE_DIR']
     comic_file_name = meta['img'].split('/')
-    if (comic_file_name[-1] != ""):
-        if (not os.path.isfile(BASE_DIR + "/" + save_path +
-                '/' + str(meta['num']) + '_' + comic_file_name[-1])):
-            r = http.request('GET', meta['img'])
-            try:
-                f = open(save_path + '/' +
-                         str(meta['num']) + '_' + comic_file_name[-1], 'bw')
-                f.write(r.data)
-                f.close()
-            except e:
-                print("Error: Cannot create the image file :" + save_path +
-                      '/' + file_number + '_' + comic_file_name[-1])
+    if (not args.noimage):
+        if (comic_file_name[-1] != ""):
+            if (not os.path.isfile(BASE_DIR + "/" + save_path +
+                    '/' + str(meta['num']) + '_' + comic_file_name[-1])):
+                r = http.request('GET', meta['img'])
+                try:
+                    f = open(save_path + '/' +
+                             str(meta['num']) + '_' + comic_file_name[-1], 'bw')
+                    f.write(r.data)
+                    f.close()
+                except e:
+                    print("Error: Cannot create the image file :" + save_path +
+                          '/' + file_number + '_' + comic_file_name[-1])
+            else:
+                verbose("Image file exists. Comic:" + str(meta['num']))
         else:
-            verbose("Image file exists. Comic:" + str(meta['num']))
-    else:
-        print("No comic file to download for "+str(meta['num']))
+            print("No comic file to download for "+str(meta['num']))
     return None
 
 
@@ -185,13 +186,19 @@ def scan(config):
             exit()
         img_url = meta['img'].split('/')
         img_file_name = img_url[-1]
-        if (img_file_name == "" or not os.path.isfile(BASE_DIR + '/' +
-                save_path + '/' + str(meta['num']) + "_" + img_file_name)):
+        if (img_file_name == ""):
             verbose(str(meta['num'])+" not found")
             continue
+        if (not args.noimage):
+            if (not os.path.isfile(BASE_DIR + '/' +
+                    save_path + '/' + str(meta['num']) + "_" + img_file_name)):
+                verbose(str(meta['num'])+" no image file.")
+                continue
+        print("not thrown")
         restruct_meta = {}
         restruct_meta["img"] = save_path + '/' + \
                                str(meta['num']) + "_" + img_file_name
+        restruct_meta["hot_link"] = meta['img']
         restruct_meta["num"] = meta['num']
         restruct_meta["title"] = meta['title']
         restruct_meta["safe_title"] = meta['safe_title']
@@ -217,8 +224,10 @@ group.add_argument("--latest", help="Download the latest comic.",
 parser.add_argument("--saveto",
                     help="The folder where the comics are to be saved.",
                     type=str, default="xkcd_archive")
-group.add_argument("--scan", help="Scan and index downloaded comics.",
+parser.add_argument("--scan", help="Scan and index downloaded comics.",
                    action="store_true")
+parser.add_argument("--noimage", help="Do not download images. Just metadata.",
+                   action="store_true")                   
 parser.add_argument("-v", "--verbose", help="Verbose output.",
                     action="store_true")
 parser.add_argument("-i", help="Ignore errors.",
