@@ -77,3 +77,6 @@ Configure your webserver to use 404.php for 404 pages. The `404.hot.php` hotlink
 xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License.
 
 I am yet to decide the terms of licensing this code.
+
+### Source Code Review.
+This project code quality is being montiored at [codacy](https://www.codacy.com/app/lord-loh/xkcd-dl/dashboard).
