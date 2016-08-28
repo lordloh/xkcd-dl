@@ -186,14 +186,11 @@ def scan(config):
             exit()
         img_url = meta['img'].split('/')
         img_file_name = img_url[-1]
-        if (img_file_name == ""):
+        if (img_file_name == "" and not args.noimage and
+                not os.path.isfile(BASE_DIR + '/' + save_path + '/' +
+                str(meta['num']) + "_" + img_file_name)):
             verbose(str(meta['num'])+" not found")
             continue
-        if (not args.noimage):
-            if (not os.path.isfile(BASE_DIR + '/' +
-                    save_path + '/' + str(meta['num']) + "_" + img_file_name)):
-                verbose(str(meta['num'])+" no image file.")
-                continue
         print("not thrown")
         restruct_meta = {}
         restruct_meta["img"] = save_path + '/' + \
