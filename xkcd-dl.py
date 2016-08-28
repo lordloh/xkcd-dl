@@ -26,8 +26,8 @@ def download_image(config, meta):
                     '/' + str(meta['num']) + '_' + comic_file_name[-1])):
                 r = http.request('GET', meta['img'])
                 try:
-                    f = open(save_path + '/' +
-                             str(meta['num']) + '_' + comic_file_name[-1], 'bw')
+                    f = open(save_path + '/' + str(meta['num']) +
+                             '_' + comic_file_name[-1], 'bw')
                     f.write(r.data)
                     f.close()
                 except e:
@@ -227,7 +227,7 @@ parser.add_argument("--saveto",
 parser.add_argument("--scan", help="Scan and index downloaded comics.",
                    action="store_true")
 parser.add_argument("--noimage", help="Do not download images. Just metadata.",
-                   action="store_true")                   
+                   action="store_true")
 parser.add_argument("-v", "--verbose", help="Verbose output.",
                     action="store_true")
 parser.add_argument("-i", help="Ignore errors.",
