@@ -25,6 +25,40 @@ optional arguments:
 ### 404 Pages
 Configure your webserver to use 404.php for 404 pages.
 
+#### For apache
+1. Clone the repo in an accessable location like /usr/share/apache2/
+    ```
+     sudo git clone https://github.com/lordloh/xkcd-dl.git /mnt/xkcd404
+    ```
+
+2. Create a directory alias for apache
+
+    In the file `/etc/apache2/mods-avaliable/alias.conf`
+    
+    ```
+        Alias /error/ "/mnt/xkcd404/"
+
+        <Directory "/mnt/xkcd404">
+                Options FollowSymlinks
+                AllowOverride None
+                Require all granted
+        </Directory>
+    ```
+    
+3. Enable the module if it is not already enabled
+
+    ```
+    sudo a2enmod alias
+    ```
+
+4. Set the error pages using the directive -
+    
+    ```
+    ErrorDocument 404 /error/404.php
+    ```
+    
+    This may be done in appropriate file like the virtual host file etc. For global xkcd error pages put this line in `/etc/apache2/conf-enabled/localized-error-pages.conf`
+
 ### License
 xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License.
 
