@@ -7,9 +7,10 @@ This script is intended to be used in cron jobs to get the newest image file or 
 
 ### Usage
 
+
 ```
-usage: xkcd-dl.py [-h] [--all] [--number NUMBER] [--latest] [--saveto SAVETO]
-                  [--scan] [-v] [-i]
+usage: xkcd-dl.py [-h] [--all | --number NUMBER | --latest] [--saveto SAVETO]
+                  [--scan] [--noimage] [-v] [-i]
 
 optional arguments:
   -h, --help       show this help message and exit
@@ -18,15 +19,28 @@ optional arguments:
   --latest         Download the latest comic.
   --saveto SAVETO  The folder where the comics are to be saved.
   --scan           Scan and index downloaded comics.
+  --noimage        Do not download images. Just metadata.
   -v, --verbose    Verbose output.
   -i               Ignore errors.
 ```
 
+To host images yourself, run as -
+```
+python3 xkcd-dl --all -i
+```
+
+To hotlink images to xkcd.com, run as -
+```
+python3 xkcd-dl --all -i --noimage
+```
+
+
 ### 404 Pages
-Configure your webserver to use 404.php for 404 pages.
+Configure your webserver to use 404.php for 404 pages. The `404.hot.php` hotlinks images to xkcd.com instead of hosting it yourself.
 
 #### For apache
 1. Clone the repo in an accessable location like /usr/share/apache2/
+    
     ```
      sudo git clone https://github.com/lordloh/xkcd-dl.git /mnt/xkcd404
     ```
