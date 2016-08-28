@@ -51,7 +51,7 @@
             }
             $comic=$comic_meta[$comic_number];
             echo "<div class=\"center\"><h2 class=\"imgTitle\">".$comic->title."</h2>
-                <img src=\"$comic->img\" alt=\"$comic->alt\" /><br/>"
+                <img src=\"".$_SERVER['CONTEXT_PREFIX'].$comic->img."\" alt=\"$comic->alt\" /><br/>"
                 ."<span class=\"caption\">".$comic->alt."</span></div>";
         ?>
         <hr/>
