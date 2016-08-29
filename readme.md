@@ -1,6 +1,8 @@
 xkcd-dl
 =======
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/23950ba7b23a4c4a8e5d0ebc9903a6dc)](https://www.codacy.com/app/lord-loh/xkcd-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lordloh/xkcd-dl&amp;utm_campaign=Badge_Grade)
+
 This python3 script downloads images form xkcd.com.
 
 This script is intended to be used in cron jobs to get the newest image file or to download all files.
@@ -25,18 +27,22 @@ optional arguments:
 ```
 
 To host images yourself, run as -
-```
+```bash
 python3 xkcd-dl --all -i
 ```
 
 To hotlink images to xkcd.com, run as -
-```
+```bash
 python3 xkcd-dl --all -i --noimage
 ```
 
+Once all the metadata is downloaded, modify the `404.php` file by commenting the line -
+```php
+define('HOSTED',true);
+```
 
 ### 404 Pages
-Configure your webserver to use 404.php for 404 pages. The `404.hot.php` hotlinks images to xkcd.com instead of hosting it yourself.
+Configure your webserver to use 404.php for 404 pages.
 
 #### For apache
 1. Clone the repo in an accessable location like /usr/share/apache2/
@@ -61,7 +67,7 @@ Configure your webserver to use 404.php for 404 pages. The `404.hot.php` hotlink
     
 3. Enable the module if it is not already enabled
 
-    ```
+    ```bash
     sudo a2enmod alias
     ```
 
@@ -77,9 +83,3 @@ Configure your webserver to use 404.php for 404 pages. The `404.hot.php` hotlink
 xkcd comics are licensed under a Creative Commons Attribution-NonCommercial 2.5 License.
 
 I am yet to decide the terms of licensing this code.
-
-### Source Code Review.
-This project code quality is being montiored at [codacy](https://www.codacy.com/app/lord-loh/xkcd-dl/dashboard).
-Current status :
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/23950ba7b23a4c4a8e5d0ebc9903a6dc)](https://www.codacy.com/app/lord-loh/xkcd-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lordloh/xkcd-dl&amp;utm_campaign=Badge_Grade)
