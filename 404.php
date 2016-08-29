@@ -30,6 +30,8 @@
         <h1 class="center heading404">404</h1>
         <hr/>
         <?php
+            // Comment the following line to hotlink to xkcd.com
+            define('HOSTED',true);
             function dbg($data){
                 echo"<pre>";
                 print_r($data);
@@ -50,8 +52,13 @@
                 file_put_contents("timefile",time()."*".$comic_number);
             }
             $comic=$comic_meta[$comic_number];
+            if (defined('HOSTED')){
+                $img_src=$_SERVER['CONTEXT_PREFIX'].$comic->img;
+            }else{
+                $img_src=$comic->hot_link;
+            }
             echo "<div class=\"center\"><h2 class=\"imgTitle\">".$comic->title."</h2>
-                <img src=\"".$_SERVER['CONTEXT_PREFIX'].$comic->img."\" alt=\"$comic->alt\" /><br/>"
+                <img src=\"".$img_src."\" alt=\"$comic->alt\" /><br/>"
                 ."<span class=\"caption\">".$comic->alt."</span></div>";
         ?>
         <hr/>
