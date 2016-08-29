@@ -167,31 +167,38 @@ def scan(config):
     BASE_DIR = config['BASE_DIR']
     save_path = args.saveto
     verbose("Starting metadata scan.")
+    # Get a list of all _info.0.json files.
     try:
         meta_file_list = glob.glob(save_path + '/meta/*_info.0.json')
     except e:
+        # In case there is an error - permission etc.
         print("Cannot read the meta folder:" + save_path +
               '/meta/*_info.0.json')
         exit()
     restruct_meta_array = []
     for meta_file in meta_file_list:
+        # Open each meta data file & get the meta data
         try:
             fp = open(meta_file, 'r')
             json_string = fp.read()
             meta = json.loads(json_string)
             fp.close()
         except e:
+            # Errors like permission etc.
             print("Error reading meta file :" +
                   meta_file + "\nCannot continue.")
             exit()
+        # Get the image file part.
         img_url = meta['img'].split('/')
         img_file_name = img_url[-1]
+        # Do not add to the indexed metadata if there is no image part and the
+        # Image file in not downloaded and only metadata is not enabled.
         if (img_file_name == "" and not args.noimage and
                 not os.path.isfile(BASE_DIR + '/' + save_path + '/' +
                 str(meta['num']) + "_" + img_file_name)):
             verbose(str(meta['num'])+" not found")
             continue
-        print("not thrown")
+        # Adde selected metadata to the index.
         restruct_meta = {}
         restruct_meta["img"] = save_path + '/' + \
                                str(meta['num']) + "_" + img_file_name
@@ -200,7 +207,9 @@ def scan(config):
         restruct_meta["title"] = meta['title']
         restruct_meta["safe_title"] = meta['safe_title']
         restruct_meta["alt"] = meta['alt']
+        # Append and add to metadata.
         restruct_meta_array.append(restruct_meta)
+    # Add to the index json file
     complete_meta = json.dumps(restruct_meta_array)
     try:
         fp = open(save_path + '/meta/meta.json', 'w')
