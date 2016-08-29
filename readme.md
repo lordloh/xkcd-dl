@@ -80,3 +80,6 @@ I am yet to decide the terms of licensing this code.
 
 ### Source Code Review.
 This project code quality is being montiored at [codacy](https://www.codacy.com/app/lord-loh/xkcd-dl/dashboard).
+Current status :
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/23950ba7b23a4c4a8e5d0ebc9903a6dc)](https://www.codacy.com/app/lord-loh/xkcd-dl?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lordloh/xkcd-dl&amp;utm_campaign=Badge_Grade)
