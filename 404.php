@@ -58,7 +58,7 @@
                 $img_src=$comic->hot_link;
             }
             echo "<div class=\"center\"><h2 class=\"imgTitle\">".$comic->title."</h2>
-                <img src=\"".$img_src."\" alt=\"$comic->alt\" /><br/>"
+                <img src=\"".$img_src."\" alt=\"$comic->alt\" height=\"$comic->h\" width=\"$comic->w\" /><br/>"
                 ."<span class=\"caption\">".$comic->alt."</span></div>";
         ?>
         <hr/>
