@@ -4,6 +4,7 @@ import urllib3
 import os.path
 import json
 import glob
+from PIL import Image
 
 
 # Function to print a string iff the -v or --verbose is passed.
@@ -20,14 +21,16 @@ def download_image(config, meta):
     save_path = args.saveto
     BASE_DIR = config['BASE_DIR']
     comic_file_name = meta['img'].split('/')
+    image_size = {}
     if (not args.noimage):
         if (comic_file_name[-1] != ""):
             if (not os.path.isfile(BASE_DIR + "/" + save_path +
                     '/' + str(meta['num']) + '_' + comic_file_name[-1])):
                 r = http.request('GET', meta['img'])
                 try:
-                    f = open(save_path + '/' + str(meta['num']) +
-                             '_' + comic_file_name[-1], 'bw')
+                    image_file = save_path + '/' + str(meta['num']) +\
+                             '_' + comic_file_name[-1]
+                    f = open(image_file, 'bw')
                     f.write(r.data)
                     f.close()
                 except e:
@@ -107,6 +110,26 @@ def download_meta(config, number):
     return meta
 
 
+def write_meta(config, meta):
+    number = meta['num']
+    args = config['args']
+    BASE_DIR = config['BASE_DIR']
+    save_path = args.saveto
+    cache_file = BASE_DIR + "/" + save_path + "/meta/" \
+            + str(number) + "_info.0.json"
+    try:
+        # save the meta data json.
+        meta_fp = open(cache_file, 'w')
+        meta_fp.write(json.dumps(meta))
+        meta_fp.close()
+    except (RuntimeError, TypeError, NameError):
+        # Problem saving - permissions etc.
+        print("Error writing meta data to file: " + save_path +
+              "/meta/" + str(meta['num']) + "_info.0.json")
+        exit()
+    return None
+
+
 def main(config):
     args = config['args']
     save_path = args.saveto
@@ -142,11 +165,29 @@ def main(config):
         # 1 image and we are done.
         verbose("Downloading image now. Comic :"+str(meta['num']))
         download_image(config, meta)
+        comic_file_name = meta['img'].split('/')
+        image_file = save_path + '/' + str(meta['num']) +\
+                             '_' + comic_file_name[-1]
+        if (comic_file_name[-1] != ""):
+            width, height = Image.open(image_file).size
+            meta['w'] = width
+            meta['h'] = height
+            verbose(str(width) + " x " + str(height))
+            write_meta(config, meta)
     elif (args.all):
         # if multiple requests are made --all, run in a loop. decrementing the
         # meta['num'] till we reach 1
         while (True):
             download_image(config, meta)
+            comic_file_name = meta['img'].split('/')
+            image_file = save_path + '/' + str(meta['num']) +\
+                                 '_' + comic_file_name[-1]
+            if (comic_file_name[-1] != ""):
+                width, height = Image.open(image_file).size
+                meta['w'] = width
+                meta['h'] = height
+                verbose(str(width) + " x " + str(height))
+                write_meta(config, meta)
             # So we do not attempt to fetch image 0 - it does not exist.
             next_num = meta['num']
             if (next_num > 1):
@@ -207,6 +248,8 @@ def scan(config):
         restruct_meta["title"] = meta['title']
         restruct_meta["safe_title"] = meta['safe_title']
         restruct_meta["alt"] = meta['alt']
+        restruct_meta["w"] = meta['w']
+        restruct_meta["h"] = meta['h']
         # Append and add to metadata.
         restruct_meta_array.append(restruct_meta)
     # Add to the index json file
