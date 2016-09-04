@@ -21,7 +21,6 @@ def download_image(config, meta):
     save_path = args.saveto
     BASE_DIR = config['BASE_DIR']
     comic_file_name = meta['img'].split('/')
-    image_size = {}
     if (not args.noimage):
         if (comic_file_name[-1] != ""):
             if (not os.path.isfile(BASE_DIR + "/" + save_path +
