@@ -23,18 +23,15 @@ def download_image(config, meta):
     comic_file_name = meta['img'].split('/')
     if (not args.noimage):
         if (comic_file_name[-1] != ""):
-            if (not os.path.isfile(BASE_DIR + "/" + save_path +
-                    '/' + str(meta['num']) + '_' + comic_file_name[-1])):
+            if (not os.path.isfile(BASE_DIR + "/" + save_path + '/' + str(meta['num']) + '_' + comic_file_name[-1])):
                 r = http.request('GET', meta['img'])
                 try:
-                    image_file = save_path + '/' + str(meta['num']) +\
-                             '_' + comic_file_name[-1]
+                    image_file = save_path + '/' + str(meta['num']) + '_' + comic_file_name[-1]
                     f = open(image_file, 'bw')
                     f.write(r.data)
                     f.close()
                 except e:
-                    print("Error: Cannot create the image file :" + save_path +
-                          '/' + file_number + '_' + comic_file_name[-1])
+                    print("Error: Cannot create the image file :" + save_path + '/' + file_number + '_' + comic_file_name[-1])
             else:
                 verbose("Image file exists. Comic:" + str(meta['num']))
         else:
@@ -51,8 +48,7 @@ def download_meta(config, number):
     if (number != -1):
         # if one queries by number
         verbose("Downloading the latest meta")
-        cache_file = BASE_DIR + "/" + save_path + "/meta/" \
-            + str(number) + "_info.0.json"
+        cache_file = BASE_DIR + "/" + save_path + "/meta/" + str(number) + "_info.0.json"
     else:
         # If we have chosen --latest or all, always query the internet,
         # since we do not know the number for the latest comic.
@@ -62,13 +58,11 @@ def download_meta(config, number):
         verbose("Cached meta file found for comic :"+str(number))
         # Meta has already been downloaded - return local file
         try:
-            meta_fp = open(save_path + '/meta/' +
-                           str(number) + '_info.0.json', 'r')
+            meta_fp = open(save_path + '/meta/' + str(number) + '_info.0.json', 'r')
             meta_json = meta_fp.read()
             meta_fp.close()
         except e:
-            print("Error reading cached meta file: " + save_path +
-                  '/meta/' + str(number) + '_info.0.json')
+            print("Error reading cached meta file: " + save_path + '/meta/' + str(number) + '_info.0.json')
             exit()
         meta = json.loads(meta_json)
     else:
@@ -79,8 +73,7 @@ def download_meta(config, number):
         else:
             # URL for a numbered comic.
             meta_url = xkcdURL + str(number) + '/info.0.json'
-        verbose("Cached meta file not found. Downloading from the internet." +
-                "Comic :" + str(number))
+        verbose("Cached meta file not found. Downloading from the internet." + "Comic :" + str(number))
         # download the info.0.json from the built meta_url
         r = http.request('GET', meta_url)
         if (r.status == 200):
@@ -89,19 +82,16 @@ def download_meta(config, number):
             meta = json.loads(data)
             try:
                 # save the meta data json.
-                meta_fp = open(save_path + "/meta/" +
-                               str(meta['num']) + "_info.0.json", 'w')
+                meta_fp = open(save_path + "/meta/" + str(meta['num']) + "_info.0.json", 'w')
                 meta_fp.write(data)
                 meta_fp.close()
             except e:
                 # Problem saving - permissions etc.
-                print("Error caching meta data to file: " + save_path +
-                      "/meta/" + str(meta['num']) + "_info.0.json")
+                print("Error caching meta data to file: " + save_path + "/meta/" + str(meta['num']) + "_info.0.json")
                 exit()
         else:
             # Error downloading the meta data from the internet.
-            print("Error Downloading meta data from " + meta_url +
-                  "\nStatus:"+str(r.status))
+            print("Error Downloading meta data from " + meta_url + "\nStatus:"+str(r.status))
             if (not args.i):
                 exit()
             meta = {'skip': True}
@@ -114,8 +104,7 @@ def write_meta(config, meta):
     args = config['args']
     BASE_DIR = config['BASE_DIR']
     save_path = args.saveto
-    cache_file = BASE_DIR + "/" + save_path + "/meta/" \
-            + str(number) + "_info.0.json"
+    cache_file = BASE_DIR + "/" + save_path + "/meta/" + str(number) + "_info.0.json"
     try:
         # save the meta data json.
         meta_fp = open(cache_file, 'w')
@@ -123,8 +112,7 @@ def write_meta(config, meta):
         meta_fp.close()
     except (RuntimeError, TypeError, NameError):
         # Problem saving - permissions etc.
-        print("Error writing meta data to file: " + save_path +
-              "/meta/" + str(meta['num']) + "_info.0.json")
+        print("Error writing meta data to file: " + save_path + "/meta/" + str(meta['num']) + "_info.0.json")
         exit()
     return None
 
@@ -165,8 +153,7 @@ def main(config):
         verbose("Downloading image now. Comic :"+str(meta['num']))
         download_image(config, meta)
         comic_file_name = meta['img'].split('/')
-        image_file = save_path + '/' + str(meta['num']) +\
-                             '_' + comic_file_name[-1]
+        image_file = save_path + '/' + str(meta['num']) + '_' + comic_file_name[-1]
         if (comic_file_name[-1] != ""):
             width, height = Image.open(image_file).size
             meta['w'] = width
@@ -179,8 +166,7 @@ def main(config):
         while (True):
             download_image(config, meta)
             comic_file_name = meta['img'].split('/')
-            image_file = save_path + '/' + str(meta['num']) +\
-                                 '_' + comic_file_name[-1]
+            image_file = save_path + '/' + str(meta['num']) + '_' + comic_file_name[-1]
             if (comic_file_name[-1] != ""):
                 width, height = Image.open(image_file).size
                 meta['w'] = width
@@ -212,8 +198,7 @@ def scan(config):
         meta_file_list = glob.glob(save_path + '/meta/*_info.0.json')
     except e:
         # In case there is an error - permission etc.
-        print("Cannot read the meta folder:" + save_path +
-              '/meta/*_info.0.json')
+        print("Cannot read the meta folder:" + save_path + '/meta/*_info.0.json')
         exit()
     restruct_meta_array = []
     for meta_file in meta_file_list:
@@ -225,23 +210,19 @@ def scan(config):
             fp.close()
         except e:
             # Errors like permission etc.
-            print("Error reading meta file :" +
-                  meta_file + "\nCannot continue.")
+            print("Error reading meta file :" + meta_file + "\nCannot continue.")
             exit()
         # Get the image file part.
         img_url = meta['img'].split('/')
         img_file_name = img_url[-1]
         # Do not add to the indexed metadata if there is no image part and the
         # Image file in not downloaded and only metadata is not enabled.
-        if (img_file_name == "" and not args.noimage and
-                not os.path.isfile(BASE_DIR + '/' + save_path + '/' +
-                str(meta['num']) + "_" + img_file_name)):
+        if (img_file_name == "" and not args.noimage and not os.path.isfile(BASE_DIR + '/' + save_path + '/' + str(meta['num']) + "_" + img_file_name)):
             verbose(str(meta['num'])+" not found")
             continue
         # Adde selected metadata to the index.
         restruct_meta = {}
-        restruct_meta["img"] = save_path + '/' + \
-                               str(meta['num']) + "_" + img_file_name
+        restruct_meta["img"] = save_path + '/' + str(meta['num']) + "_" + img_file_name
         restruct_meta["hot_link"] = meta['img']
         restruct_meta["num"] = meta['num']
         restruct_meta["title"] = meta['title']
@@ -267,19 +248,12 @@ parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument("--all", help="Download all comics.", action="store_true")
 group.add_argument("--number", help="Download comics number.", type=str)
-group.add_argument("--latest", help="Download the latest comic.",
-                   action="store_true")
-parser.add_argument("--saveto",
-                    help="The folder where the comics are to be saved.",
-                    type=str, default="xkcd_archive")
-parser.add_argument("--scan", help="Scan and index downloaded comics.",
-                   action="store_true")
-parser.add_argument("--noimage", help="Do not download images. Just metadata.",
-                   action="store_true")
-parser.add_argument("-v", "--verbose", help="Verbose output.",
-                    action="store_true")
-parser.add_argument("-i", help="Ignore errors.",
-                    action="store_true")
+group.add_argument("--latest", help="Download the latest comic.", action="store_true")
+parser.add_argument("--saveto", help="The folder where the comics are to be saved.", type=str, default="xkcd_archive")
+parser.add_argument("--scan", help="Scan and index downloaded comics.", action="store_true")
+parser.add_argument("--noimage", help="Do not download images. Just metadata.", action="store_true")
+parser.add_argument("-v", "--verbose", help="Verbose output.", action="store_true")
+parser.add_argument("-i", help="Ignore errors.", action="store_true")
 args = parser.parse_args()
 config = {}
 config['BASE_DIR'] = os.path.dirname(os.path.realpath(__file__))
