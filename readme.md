@@ -50,6 +50,12 @@ Configure your webserver to use 404.php for 404 pages.
     ```
      sudo git clone https://github.com/lordloh/xkcd-dl.git /mnt/xkcd404
     ```
+    
+    Change ownership or permissions of  the `timefile`. The `timefile` ensures that only one comic is chosen and displayed for 15 minutes. This discourages people from pressing `F5` on your 404 pages for entertainment.
+    
+    ```
+    sudo chown www-data:www-data timefile
+    ```
 
 2. Create a directory alias for apache
 
