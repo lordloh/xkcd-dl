@@ -4,6 +4,7 @@ import urllib3
 import os.path
 import json
 import glob
+import certifi
 from PIL import Image
 
 
@@ -258,7 +259,7 @@ args = parser.parse_args()
 config = {}
 config['BASE_DIR'] = os.path.dirname(os.path.realpath(__file__))
 config['xkcdURL'] = 'http://xkcd.com/'
-http = urllib3.PoolManager()
+http = urllib3.PoolManager(cert_reqs='CERT_REQUIRED', ca_certs=certifi.where())
 config['http'] = http
 config['args'] = args
 if args.all:
